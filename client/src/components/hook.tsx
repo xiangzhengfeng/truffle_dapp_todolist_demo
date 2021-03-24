@@ -1,51 +1,13 @@
-import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/Todolist.json";
-import getWeb3 from "./getWeb3";
+import React, { Component, useCallback, useEffect, createContext, ReactNode, useState, useContext } from "react";
+import SimpleStorageContract from "../contracts/Todolist.json";
+import getWeb3 from "../getWeb3";
+import styled from 'styled-components'
 
-import "./App.css";
-
-class App extends Component {
+class App1 extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null, list: [], value: "" };
 
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-      //this.getList();
-      instance.events.HandleList()
-        .on("connected", function (subscriptionId) {
-          console.log(subscriptionId, "events 已连接");
-        })
-        .on('data', function (event) {
-          console.log(event, "data"); // 与上述可选的回调结果相同
-        })
-
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
-  };
-
   runExample = async () => {
-    const { accounts, contract } = this.state;
+    const { accounts, contract } = this.state as { accounts: any, contract: any };
 
     // Stores a given value, 5 by default.
     //await contract.methods.set(5).send({ from: accounts[0] });
@@ -60,7 +22,7 @@ class App extends Component {
   };
 
   getList = async () => {
-    const { contract } = this.state;
+    const { accounts, contract } = this.state as { accounts: any, contract: any };
     const len = await contract.methods.getLength().call();
     for (var i = 0; i < len; i++) {
       const aa = await contract.methods.lists(i).call()
@@ -68,8 +30,8 @@ class App extends Component {
     }
   }
 
-  add = async (value) => {
-    const { accounts, contract } = this.state;
+  add = async (value: any) => {
+    const { accounts, contract } = this.state as { accounts: any, contract: any };
     // Stores a given value, 5 by default.
     await contract.methods.add(Number(value)).send({ from: accounts[0] });
 
@@ -87,8 +49,8 @@ class App extends Component {
     //this.setState({ storageValue: response });
   };
 
-  done = async (value) => {
-    const { accounts, contract } = this.state;
+  done = async (value: any) => {
+    const { accounts, contract } = this.state as { accounts: any, contract: any };
     // Stores a given value, 5 by default.
     await contract.methods.done(Number(value)).send({ from: accounts[0] });
 
@@ -99,8 +61,8 @@ class App extends Component {
     this.setState({ storageValue: response });
   };
 
-  remove = async (value) => {
-    const { accounts, contract } = this.state;
+  remove = async (value: any) => {
+    const { accounts, contract } = this.state as { accounts: any, contract: any };
     // Stores a given value, 5 by default.
     await contract.methods.remove(Number(value)).send({ from: accounts[0] });
 
@@ -149,4 +111,72 @@ class App extends Component {
   }
 }
 
-export default App;
+export const ContrctContext = createContext(
+  {} as {
+    accounts: any;
+    contract: any;
+  },
+);
+
+export const useContract = () => useContext(ContrctContext);
+
+export const ContrctProvider = ({ children }: { children: ReactNode }) => {
+  const [{ accounts, contract }, setContract] = useState({ accounts: null, contract: null })
+  const connectContract = useCallback(async () => {
+
+    try {
+      const web3 = await getWeb3();
+      const accounts = await web3.eth.getAccounts();
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = (SimpleStorageContract as any).networks[networkId];
+      const contract = new web3.eth.Contract(
+        SimpleStorageContract.abi,
+        deployedNetwork && deployedNetwork.address,
+      );
+
+      contract.events.HandleList()
+        .on("connected", function (subscriptionId: string) {
+          console.log(subscriptionId, "events 已连接");
+        })
+        .on('data', function (event: any) {
+          console.log(event, "data"); // 与上述可选的回调结果相同
+        })
+
+      setContract({ accounts, contract })
+
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`,
+      );
+      console.error(error);
+    }
+
+  }, [])
+
+  useEffect(() => {
+    connectContract()
+  }, [])
+
+  return (<ContrctContext.Provider value={{ accounts, contract }}>
+    {children}
+  </ContrctContext.Provider>)
+}
+
+export const useAdd = ({ accounts, contract }: { accounts: any, contract: any }) => {
+  const add = useCallback(async (value) => {
+    await contract.methods.add(Number(value)).send({ from: accounts[0] });
+  }, [])
+  return add
+}
+
+export const getLIst = async () => {
+  /* const { accounts, contract } = this.state as { accounts: any, contract: any };
+  const list: any[] = [];
+  const len = await contract.methods.getLength().call();
+  for (var i = 0; i < len; i++) {
+    const aa = await contract.methods.lists(i).call()
+    console.log(aa)
+  }
+  return list */
+}
