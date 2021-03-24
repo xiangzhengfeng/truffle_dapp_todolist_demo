@@ -1,0 +1,23 @@
+{
+  "name": "truffle-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "push:funmit": "git add . && git commit -m '人生何曾驻旧足，前端处处是新旅' && git push origin main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiangzhengfeng/truffle-demo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiangzhengfeng/truffle-demo/issues"
+  },
+  "homepage": "https://github.com/xiangzhengfeng/truffle-demo#readme"
+}
