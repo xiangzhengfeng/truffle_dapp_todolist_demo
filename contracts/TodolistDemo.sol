@@ -2,7 +2,7 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 contract TodolistDemo {
-    uint256 beforeDeleteId;
+    uint256 index;
 
     struct List {
         uint256 id; // id
@@ -14,12 +14,12 @@ contract TodolistDemo {
 
     List[] public lists;
 
-    event HanderList(
+    event HandleList(
         uint256 id,
         uint256 time,
         uint256 content,
         address writer,
-        bool isDone
+        string types
     );
 
     modifier LegalId(uint256 id) {
@@ -29,32 +29,20 @@ contract TodolistDemo {
     }
 
     function add(uint256 content) public {
-        emit HanderList(
-            beforeDeleteId,
-            block.timestamp,
-            content,
-            msg.sender,
-            false
-        );
-        if (beforeDeleteId == lists.length) {
+        emit HandleList(index, block.timestamp, content, msg.sender, "add");
+        if (index == lists.length) {
             lists.push(
-                List(
-                    beforeDeleteId,
-                    block.timestamp,
-                    content,
-                    msg.sender,
-                    false
-                )
+                List(index, block.timestamp, content, msg.sender, false)
             );
-            beforeDeleteId++;
+            index++;
         } else {
-            lists[beforeDeleteId].id = beforeDeleteId;
-            lists[beforeDeleteId].time = block.timestamp;
-            lists[beforeDeleteId].content = content;
-            lists[beforeDeleteId].writer = msg.sender;
-            lists[beforeDeleteId].isDone = false;
+            lists[index].id = index;
+            lists[index].time = block.timestamp;
+            lists[index].content = content;
+            lists[index].writer = msg.sender;
+            lists[index].isDone = false;
 
-            beforeDeleteId = lists.length;
+            index = lists.length;
         }
     }
 
@@ -66,12 +54,20 @@ contract TodolistDemo {
         List storage list = lists[id];
         require(list.isDone == false);
         list.isDone = true;
+        emit HandleList(id, block.timestamp, list.content, msg.sender, "done");
     }
 
     function remove(uint256 id) public LegalId(id) {
         List storage list = lists[id];
         require(list.isDone == true);
+        emit HandleList(
+            id,
+            block.timestamp,
+            list.content,
+            msg.sender,
+            "remove"
+        );
         delete lists[id];
-        beforeDeleteId = id;
+        index = id;
     }
 }
