@@ -1,6 +1,5 @@
 import * as React from 'react'
 import styled from 'styled-components';
-import { useContract } from './hook';
 
 const Text = styled.div`
   font-size: 30px;

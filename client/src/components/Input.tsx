@@ -7,9 +7,10 @@ const InputBox = styled.div`
   width: '100%';
 `
 
-const Label = styled.div`
-  color: ${'red'};
-  border: 1px solid red
+const Label = styled.span`
+  color: white;
+  height: 1.5rem;
+  background: red;
 `
 
 export const Input = () => {
@@ -19,19 +20,22 @@ export const Input = () => {
 
   return (
     <InputBox>
-      <Label>
-        事项
-      </Label>
       <input
         placeholder="请输入待办事项"
-        style={{ color: themeColor, padding: 0 }}
+        style={{
+          color: themeColor,
+          padding: 0,
+          height: "1.5rem",
+          width: '80%',
+          paddingLeft: ".3rem"
+        }}
         value={value}
         maxLength={100}
         onChange={val => { setValue(val.target.value) }}
       />
       <Label onClick={() => {
-        if (Number(value) > 0) {
-          add(Number(value))
+        if (value) {
+          add(value)
         }
       }}>
         添加

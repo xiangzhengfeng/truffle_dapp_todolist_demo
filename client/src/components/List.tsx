@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { themeColor } from '../config/const'
 import styled from 'styled-components'
-import { Tabs } from 'antd-mobile';
-import Item from './Item'
+import { useContract, useRemove, useDone } from './hook';
 
 export interface listItemProps {
   value: string,
@@ -20,7 +19,7 @@ interface ListProps {
 const ListBox = styled.div`
   max-height: '70%';
   margin-top: 20px;
-  background-color: ${ themeColor};
+  background-color: white;
 `
 
 const TipText = styled.div`
@@ -44,29 +43,33 @@ const tabs = [
   { title: '已完成', sub: '3' }
 ];
 
-export default class Lists extends React.Component<ListProps> {
-  render() {
-    const { list, handleClick, handleTab, tabList } = this.props
-    return (<ListBox>
+export const List = () => {
+  const { accounts, contract, list } = useContract();
+  const done = useDone({ accounts, contract });
+  const remove = useRemove({ accounts, contract });
 
-      {/* 提示栏 */}
-      {list.length === 0 ? <TipText className="animated fadeInLeft">暂无待办事项</TipText> : <TipText2 className="animated fadeInRight">向左滑动可进行操作待办事项，点击可查看详情</TipText2>}
+  return (<ListBox>
+    {
+      list!.map((item: any, i: number) => {
+        return <div key={i}>{item.content} -------- <a href="#" onClick={() => { !item.isDone ? done(i) : remove(i) }}>{!item.isDone ? "完成" : "删除"}</a></div>
+      })
+    }
+    {/* 
+    {list.length === 0 ? <TipText className="animated fadeInLeft">暂无待办事项</TipText> : <TipText2 className="animated fadeInRight">向左滑动可进行操作待办事项，点击可查看详情</TipText2>}
+ 
+    {list.length !== 0 ? <Tabs tabs={tabs}
+      initialPage={0}
+      swipeable={false}
+      tabBarActiveTextColor={themeColor}
+      tabBarUnderlineStyle={{ color: themeColor }}
+      onTabClick={(_, i) => { handleTab(i) }}
+    >
+      <div>{tabList.map((item, index) => <Item item={item} index={index} key={index} handleClick={key => handleClick(key)} />)}</div>
+      <div>{tabList.map((item, index) => <Item item={item} index={index} key={index} handleClick={key => handleClick(key)} />)}</div>
+      <div>{tabList.map((item, index) => <Item item={item} index={index} key={index} handleClick={key => handleClick(key)} />)}</div>
+    </Tabs> : null}
 
-      {/* 标签栏 */}
-      {list.length !== 0 ? <Tabs tabs={tabs}
-        initialPage={0}
-        swipeable={false}
-        tabBarActiveTextColor={themeColor}
-        tabBarUnderlineStyle={{ color: themeColor }}
-        onTabClick={(_, i) => { handleTab(i) }}
-      >
-        <div>{tabList.map((item, index) => <Item item={item} index={index} key={index} handleClick={key=>handleClick(key)}/>)}</div>
-        <div>{tabList.map((item, index) => <Item item={item} index={index} key={index} handleClick={key=>handleClick(key)}/>)}</div>
-        <div>{tabList.map((item, index) => <Item item={item} index={index} key={index} handleClick={key=>handleClick(key)}/>)}</div>
-      </Tabs> : null}
-
-      {tabList.length === 0 && list.length !== 0 && <TipText2 className="animated fadeInDown">{'暂无事项'}</TipText2>}
-    </ListBox>
-    )
-  }
+    {tabList.length === 0 && list.length !== 0 && <TipText2 className="animated fadeInDown">{'暂无事项'}</TipText2>} */}
+  </ListBox>
+  )
 }
