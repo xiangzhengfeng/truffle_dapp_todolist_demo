@@ -92,7 +92,6 @@ export const getListFun = async (contract: any) => {
   let list: any[] = [];
   for (let i = 0; i < len; i++) {
     let item = await contract.methods.lists(i).call()
-    console.log(item)
     list.push(item)
   }
   return list
