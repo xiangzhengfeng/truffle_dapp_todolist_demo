@@ -1,16 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from 'styled-components'
 import { themeColor } from './config/const'
 import Title from "./components/Title"
 import { Input } from "./components/Input"
 import { List } from "./components/List"
 import { ContrctProvider, useContract } from "./components/hook";
-
-export interface listItemProps {
-  value: string,
-  isDone: boolean,
-  key: string
-}
 
 const TodoList = styled.div`
   width: 100vw;

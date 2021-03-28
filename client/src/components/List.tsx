@@ -1,20 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { themeColor } from '../config/const'
 import styled from 'styled-components'
 import { useContract, useRemove, useDone } from './hook';
-
-export interface listItemProps {
-  value: string,
-  isDone: boolean,
-  key: string
-}
-
-interface ListProps {
-  tabList: Array<listItemProps>,
-  list: Array<listItemProps>,
-  handleClick: (key: string) => void,
-  handleTab: (i: number) => void
-}
 
 const ListBox = styled.div`
   max-height: '70%';
