@@ -8,7 +8,7 @@ const ListBox = styled.div`
   margin-top: 20px;
   background-color: white;
   padding: .5rem;
-  border-radius: 1rem;
+  border-radius: .3rem;
   overflow: scroll;
 `
 
