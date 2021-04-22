@@ -8,7 +8,10 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "push": "git add . && git commit -m '人生何曾驻旧足，前端处处是新旅' && git push origin main"
+    "push": "git add . && git commit -m '人生何曾驻旧足，前端处处是新旅' && git push origin main",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
   },
   "repository": {
     "type": "git",
@@ -19,8 +22,34 @@
   "bugs": {
     "url": "https://github.com/xiangzhengfeng/truffle_dapp_todolist_demo/issues"
   },
-  "homepage": "https://github.com/xiangzhengfeng/truffle_dapp_todolist_demo#readme",
+  "homepage": "./",
   "dependencies": {
-    "@truffle/hdwallet-provider": "1.2.3"
+    "@truffle/hdwallet-provider": "1.2.3",
+    "react": "16.11.0",
+    "react-dom": "16.11.0",
+    "react-scripts": "3.2.0",
+    "web3": "1.2.2"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^11.2.5",
+    "@types/jest": "^26.0.21",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "@types/styled-components": "^5.1.9",
+    "@types/web3": "^1.2.2",
+    "styled-components": "^5.2.1",
+    "typescript": "^4.2.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
